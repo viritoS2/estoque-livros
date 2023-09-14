@@ -1,8 +1,8 @@
-package com.exemplo.estoque.livros.demo.domain;
+package com.exemplo.estoque.livros.demo.controller;
 
-import com.exemplo.estoque.livros.demo.domain.user.DadosDeCadastroUser;
-import com.exemplo.estoque.livros.demo.domain.user.User;
-import com.exemplo.estoque.livros.demo.domain.user.UserRepository;
+import com.exemplo.estoque.livros.demo.dto.DadosDeCadastroUser;
+import com.exemplo.estoque.livros.demo.dto.User;
+import com.exemplo.estoque.livros.demo.repository.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;

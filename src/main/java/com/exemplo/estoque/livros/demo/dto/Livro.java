@@ -1,5 +1,4 @@
-package com.exemplo.estoque.livros.demo.domain.livro;
-
+package com.exemplo.estoque.livros.demo.dto;
 
 import jakarta.persistence.*;
 
@@ -29,6 +28,4 @@ public class Livro {
                 "autor=" + this.autor + '\'' +
                 '}';
     }
-
 }
-
