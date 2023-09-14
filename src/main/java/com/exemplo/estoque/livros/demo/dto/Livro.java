@@ -8,14 +8,17 @@ public class Livro {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long id;
-    public String nome;
-    public String autor;
+    private Long id;
+    private String nome;
+    private String autor;
+
+    private Long quantidade=0L;
 
     public Livro(DadosDeCasdastroLivro dados) {
         this.id = dados.id();
         this.nome = dados.nome();
         this.autor = dados.autor();
+        this.quantidade = dados.quantidade();
     }
 
     public Livro(){};
@@ -26,6 +29,7 @@ public class Livro {
                 "id=" + this.id + '\'' +
                 "nome=" + this.nome + '\'' +
                 "autor=" + this.autor + '\'' +
+                "quantidade em estoque=" + this.quantidade + '\'' +
                 '}';
     }
 }
