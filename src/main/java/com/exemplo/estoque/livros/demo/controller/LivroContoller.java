@@ -1,9 +1,9 @@
-package com.exemplo.estoque.livros.demo.domain;
+package com.exemplo.estoque.livros.demo.controller;
 
 
-import com.exemplo.estoque.livros.demo.domain.livro.DadosDeCasdastroLivro;
-import com.exemplo.estoque.livros.demo.domain.livro.Livro;
-import com.exemplo.estoque.livros.demo.domain.livro.LivroRepository;
+import com.exemplo.estoque.livros.demo.dto.DadosDeCasdastroLivro;
+import com.exemplo.estoque.livros.demo.dto.Livro;
+import com.exemplo.estoque.livros.demo.repository.LivroRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +38,6 @@ public class LivroContoller {
 
         try {
             repository.deleteById(id);
-
             return ResponseEntity.ok("Livro deletado"+ livro);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocorreu algum erro ao tentar deletar");
@@ -52,7 +51,6 @@ public class LivroContoller {
         try {
             var livro = new Livro(dados);
             repository.save(livro);
-
             return ResponseEntity.ok("Livro cadastrado" + livro);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocorreu algum erro ao tentar cadastrar o livro");
