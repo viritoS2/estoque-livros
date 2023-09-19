@@ -1,33 +1,33 @@
 package com.exemplo.estoque.livros.demo.controller;
 
-
 import com.exemplo.estoque.livros.demo.dto.DadosDeCasdastroLivro;
 import com.exemplo.estoque.livros.demo.dto.Livro;
 import com.exemplo.estoque.livros.demo.repository.LivroRepository;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
 
-
-@Controller("/")
+@RestController("/")
 @Transactional
 public class LivroContoller {
 
     @Autowired
     private LivroRepository repository;
 
-
     @GetMapping
     @ResponseBody
-    public List<Livro> livro(){
-        var listaDeLivros = repository.findAll();
-        return listaDeLivros;
+    public String livro(){
+        List<Livro> livros = repository.findAll();
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String json = gson.toJson(livros);
+        return json;
     }
 
     @DeleteMapping
@@ -44,7 +44,6 @@ public class LivroContoller {
         }
     }
 
-
     @RequestMapping("/cadastro/livro")
     @PostMapping
     public ResponseEntity<String> cadastraLivro(@RequestBody DadosDeCasdastroLivro dados){
@@ -56,5 +55,4 @@ public class LivroContoller {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocorreu algum erro ao tentar cadastrar o livro");
         }
     }
-
 }
