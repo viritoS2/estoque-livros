@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class LivroController {
+public class LivroControllerIT {
 
     @InjectMocks
     private LivroContoller livroController;
