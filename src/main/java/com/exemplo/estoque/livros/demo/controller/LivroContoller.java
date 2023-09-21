@@ -21,24 +21,25 @@ public class LivroContoller {
     @Autowired
     private LivroRepository repository;
 
+    public LivroContoller(LivroRepository repository) {
+        this.repository = repository;
+    }
+
     @GetMapping
-    @ResponseBody
-    public String livro(){
+    public ResponseEntity<String> getLivros(){
         List<Livro> livros = repository.findAll();
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String json = gson.toJson(livros);
-        return json;
+
+        return ResponseEntity.ok(json);
     }
 
     @DeleteMapping
-    public ResponseEntity<String> deletaLivro(@RequestBody Map<String, Long> corpoDaRequisicao){
+    public ResponseEntity<String> deleteLivro(@RequestBody Map<String, Long> corpoDaRequisicao){
         Long id = corpoDaRequisicao.get("id");
-        var livro = repository.getReferenceById(id);
-        repository.deleteById(id);
-
         try {
             repository.deleteById(id);
-            return ResponseEntity.ok("Livro deletado"+ livro);
+            return ResponseEntity.ok("Livro removido");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocorreu algum erro ao tentar deletar");
         }
@@ -46,7 +47,7 @@ public class LivroContoller {
 
     @RequestMapping("/cadastro/livro")
     @PostMapping
-    public ResponseEntity<String> cadastraLivro(@RequestBody DadosDeCasdastroLivro dados){
+    public ResponseEntity<String> postLivro(@RequestBody DadosDeCasdastroLivro dados){
         try {
             var livro = new Livro(dados);
             repository.save(livro);

@@ -25,7 +25,7 @@ public class Livro {
 
     @Override
     public String toString() {
-        return "Livro{ " +
+        return "Livro{" +
                 "id=" + this.id + '\'' +
                 "nome=" + this.nome + '\'' +
                 "autor=" + this.autor + '\'' +
