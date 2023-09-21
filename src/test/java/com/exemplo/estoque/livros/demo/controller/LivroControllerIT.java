@@ -57,6 +57,7 @@ public class LivroControllerIT {
         String expectedJson = new GsonBuilder().setPrettyPrinting().create().toJson(livros);
         String actualJson = responseEntity.getBody();
         assertEquals(expectedJson, actualJson);
+        verify(livroRepository).findAll();
 
     }
 
