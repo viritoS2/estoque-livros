@@ -13,13 +13,17 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
-@RestController("/")
+@RestController()
+@RequestMapping("/livros")
 @Transactional
 public class LivroContoller {
 
     @Autowired
-    private LivroRepository repository;
+    private  LivroRepository repository;
+
+    private Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     public LivroContoller(LivroRepository repository) {
         this.repository = repository;
@@ -28,10 +32,22 @@ public class LivroContoller {
     @GetMapping
     public ResponseEntity<String> getLivros(){
         List<Livro> livros = repository.findAll();
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String json = gson.toJson(livros);
 
         return ResponseEntity.ok(json);
+    }
+
+    @GetMapping("/livro")
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public ResponseEntity<String> getLivroByID(@RequestParam Long id){
+        try{
+            Livro livro = repository.findById(id).orElse(null);
+            String json = gson.toJson(livro);
+
+            return ResponseEntity.ok(json);
+        } catch (Exception e ){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Livro não encontrado");
+        }
     }
 
     @DeleteMapping
