@@ -16,10 +16,7 @@ import org.mockito.quality.Strictness;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -43,7 +40,6 @@ public class LivroControllerIT {
 
     @Test
     public void testGetLivro() {
-
         List<Livro> livros = new ArrayList<>();
         livros.add(new Livro(new DadosDeCasdastroLivro(1L, "Harry Potter", "J.K", 4L)));
         livros.add(new Livro(new DadosDeCasdastroLivro(1L, "Harry Potter e a Ordem da Fenix", "J.K", 10L)));
@@ -56,8 +52,28 @@ public class LivroControllerIT {
 
         String expectedJson = new GsonBuilder().setPrettyPrinting().create().toJson(livros);
         String actualJson = responseEntity.getBody();
+
         assertEquals(expectedJson, actualJson);
         verify(livroRepository).findAll();
+
+    }
+
+    @Test
+    public void testGetLivroByID() {
+        DadosDeCasdastroLivro dados = new DadosDeCasdastroLivro(1L, "Harry Potter e a Ordem da Fenix", "J.K", 10L);
+        Livro livro = new Livro(dados);
+
+        when(livroRepository.findById(any())).thenReturn(Optional.of(livro));
+
+        ResponseEntity<String> responseEntity = livroController.getLivroByID(1L);
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+
+        String expectedJson = new GsonBuilder().setPrettyPrinting().create().toJson(livro);
+        String actualJson = responseEntity.getBody();
+
+        assertEquals(expectedJson, actualJson);
+        verify(livroRepository).findById(1L);
 
     }
 
@@ -72,6 +88,7 @@ public class LivroControllerIT {
 
         String expectedJson = "Livro removido";
         String actualJson = responseEntity.getBody();
+
         assertEquals(expectedJson, actualJson);
 
         verify(livroRepository).deleteById(10L);
