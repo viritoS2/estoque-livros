@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @RestController()
@@ -52,14 +51,18 @@ public class LivroContoller {
         }
     }
 
-    @DeleteMapping
-    public ResponseEntity<String> deleteLivro(@RequestBody Map<String, Long> corpoDaRequisicao){
-        Long id = corpoDaRequisicao.get("id");
-        try {
-            repository.deleteById(id);
-            return ResponseEntity.ok("Livro removido");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocorreu algum erro ao tentar deletar");
+    @DeleteMapping("/livro")
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<String> deleteLivroByID(@RequestParam Long id){
+        try{
+            if (repository.existsById(id)){
+                repository.deleteById(id);
+                return ResponseEntity.ok("Deletado com sucesso");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Esse livro não está cadastrado");
+            }
+        } catch (Exception e ){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro: " + e);
         }
     }
 
