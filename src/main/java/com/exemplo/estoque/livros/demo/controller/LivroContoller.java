@@ -41,12 +41,14 @@ public class LivroContoller {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<String> getLivroByID(@RequestParam Long id){
         try{
-            Livro livro = repository.findById(id).orElse(null);
+            Optional<Livro> livroOptional = repository.findById(id);
+            Livro livro = livroOptional.orElse(null);
+            if( livro == null){throw new Exception("Livro não encontrado");}
             String json = gson.toJson(livro);
 
             return ResponseEntity.ok(json);
         } catch (Exception e ){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Livro não encontrado");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Erro: " + e);
         }
     }
 
