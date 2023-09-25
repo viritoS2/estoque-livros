@@ -79,19 +79,20 @@ public class LivroControllerIT {
 
     @Test
     public void testDeleteLivro() {
-        Map<String, Long> corpoDaRequisicao = new HashMap<>();
-        corpoDaRequisicao.put("id", 10L);
+        Long id = 1L;
+        when(livroRepository.existsById(id)).thenReturn(true);
 
-        ResponseEntity<String> responseEntity = livroController.deleteLivro(corpoDaRequisicao);
+        ResponseEntity<String> responseEntity = livroController.deleteLivroByID(id);
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
-        String expectedJson = "Livro removido";
+        String expectedJson = "Deletado com sucesso";
         String actualJson = responseEntity.getBody();
 
         assertEquals(expectedJson, actualJson);
 
-        verify(livroRepository).deleteById(10L);
+        verify(livroRepository).existsById(any());
+        verify(livroRepository).deleteById(any());
     }
 
     @Test
