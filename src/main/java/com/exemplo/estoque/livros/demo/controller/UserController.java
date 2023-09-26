@@ -77,7 +77,6 @@ public class UserController {
             userRepository.save(newUser);
             return ResponseEntity.ok("Cadastrado com sucesso");
         } catch (Exception e){
-            System.out.println(e);
             return  ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
