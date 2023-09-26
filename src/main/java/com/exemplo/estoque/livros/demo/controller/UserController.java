@@ -21,7 +21,7 @@ import java.util.Optional;
 @ResponseBody
 public class UserController {
 
-    @Autowired()
+    @Autowired
     private UserRepository userRepository;
 
     private Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -33,7 +33,6 @@ public class UserController {
             String json = gson.toJson(listaDeUsers);
             return ResponseEntity.ok(json);
         } catch (Exception e){
-            System.out.println(e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -44,11 +43,13 @@ public class UserController {
         try{
             Optional<User> userOptional = userRepository.findById(id);
             User user = userOptional.orElse(null);
-            if( user == null){throw new Exception("Usuário não encontrado");}
-            String json = gson.toJson(user);
-            return ResponseEntity.ok(json);
+            if( user == null){  return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Esse usuário não está cadastrado");}
+            else {
+                String json = gson.toJson(user);
+                return ResponseEntity.ok(json);
+            }
         } catch (Exception e  ){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Erro: " + e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro: " + e);
         }
     }
 
