@@ -62,9 +62,9 @@ public class GetUserByIdControllerIT {
     }
 
     @Test
-    public void testGeUserByIDNotFoundError() throws RuntimeException{
+    public void testGeUserByIDNotFoundError() {
 
-        when(userRepository.findById(any())).thenThrow(new RuntimeException());
+        when(userRepository.findById(1L)).thenReturn(null);
 
         ResponseEntity<String> responseEntity = userController.getUserById(70L);
 
@@ -73,8 +73,25 @@ public class GetUserByIdControllerIT {
         String expectedJson = "Erro: java.lang.RuntimeException";
         String actualJson = responseEntity.getBody();
 
+        assertEquals("Esse usuário não está cadastrado", actualJson );
+        verify(userRepository).findById(70L);
+
+    }
+    @Test
+    public void testGeUserByIDGenericError() throws RuntimeException {
+
+        when(userRepository.findById(any())).thenThrow(new RuntimeException());
+
+        ResponseEntity<String> responseEntity = userController.getUserById(70L);
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
+
+        String expectedJson = "Erro: java.lang.RuntimeException";
+        String actualJson = responseEntity.getBody();
+
         assertEquals("Erro: java.lang.RuntimeException", actualJson );
         verify(userRepository).findById(70L);
 
     }
+
 }
