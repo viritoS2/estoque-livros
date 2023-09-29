@@ -5,6 +5,7 @@ import com.exemplo.estoque.livros.demo.dto.Livro;
 import com.exemplo.estoque.livros.demo.repository.LivroRepository;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+
+@Tag(name = "Livro Controller", description = "Controller do Livro")
 @RestController()
 @RequestMapping("/livros")
 @Transactional
@@ -28,7 +31,7 @@ public class LivroContoller {
         this.repository = repository;
     }
 
-    @GetMapping
+    @GetMapping()
     public ResponseEntity<String> getLivros(){
         List<Livro> livros = repository.findAll();
         String json = gson.toJson(livros);
@@ -36,9 +39,9 @@ public class LivroContoller {
         return ResponseEntity.ok(json);
     }
 
-    @GetMapping("/livro")
+    @GetMapping()
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<String> getLivroByID(@RequestParam Long id){
+    public ResponseEntity<String> getLivroByID(@RequestParam(name = "id", required = true) Long id){
         try{
             Optional<Livro> livroOptional = repository.findById(id);
             Livro livro = livroOptional.orElse(null);
@@ -51,9 +54,9 @@ public class LivroContoller {
         }
     }
 
-    @DeleteMapping("/livro")
+    @DeleteMapping()
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<String> deleteLivroByID(@RequestParam Long id){
+    public ResponseEntity<String> deleteLivroByID(@RequestParam(name = "id", required = true) Long id){
         try{
             if (repository.existsById(id)){
                 repository.deleteById(id);
@@ -66,8 +69,8 @@ public class LivroContoller {
         }
     }
 
-    @RequestMapping("/cadastro/livro")
-    @PostMapping
+    @PostMapping()
+    @RequestMapping(value = "/cadastro", method = RequestMethod.POST)
     public ResponseEntity<String> postLivro(@RequestBody DadosDeCasdastroLivro dados){
         try {
             var livro = new Livro(dados);

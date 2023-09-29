@@ -5,16 +5,18 @@ import com.exemplo.estoque.livros.demo.dto.User;
 import com.exemplo.estoque.livros.demo.repository.UserRepository;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-
 import java.util.List;
 import java.util.Optional;
 
+
+@Tag(name = "User Controller", description = "Controller do User")
 @RestController
 @RequestMapping("/users")
 @Transactional
@@ -27,6 +29,7 @@ public class UserController {
     private Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     @GetMapping
+    @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<String> getUsers(){
         try{
             List<User> listaDeUsers = userRepository.findAll();
@@ -39,7 +42,7 @@ public class UserController {
 
     @GetMapping("/user")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<String> getUserById(@RequestParam Long id) {
+    public ResponseEntity<String> getUserById(@RequestParam(name = "id", required = true) Long id) {
         try{
             Optional<User> userOptional = userRepository.findById(id);
             User user = userOptional.orElse(null);
@@ -55,7 +58,7 @@ public class UserController {
 
     @DeleteMapping("/user")
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<String> deleteUserById(@RequestParam Long id) {
+    public ResponseEntity<String> deleteUserById(@RequestParam(name = "id", required = true)  Long id) {
         try{
             if(userRepository.existsById(id)){
                 userRepository.deleteById(id);
@@ -70,11 +73,11 @@ public class UserController {
     }
 
     @PostMapping
-    @RequestMapping("user/cadastro")
+    @RequestMapping(value = "/cadastro", method = RequestMethod.POST)
     public ResponseEntity<String> cadastraUser(@RequestBody DadosDeCadastroUser dados){
         try{
-            User newUser = new User(dados);
-            userRepository.save(newUser);
+             User newUser = new User(dados);
+             userRepository.save(newUser);
             return ResponseEntity.ok("Cadastrado com sucesso");
         } catch (Exception e){
             return  ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
