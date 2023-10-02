@@ -87,10 +87,21 @@ public class UserController {
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
     public ResponseEntity<String> updateUser(@RequestParam(name = "id", required = true)  Long id,
                                             @RequestBody DadosDeCadastroUser dadosUser){
-        User user = userRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("User não cadastrado"));
-        user.setEmail(dadosUser.email());
-        userRepository.save(user);
 
-        return  ResponseEntity.ok(gson.toJson(user));
+            try{
+                User user = userRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("User não cadastrado"));
+                user.setEmail(dadosUser.email());
+                userRepository.save(user);
+            return  ResponseEntity.ok(gson.toJson(user));}
+
+            catch (ResourceNotFoundException e){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Erro: "+ e);
+            }
+            catch (GenericError e){
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro: "+ e);
+            }
+
+
+
     }
 }
