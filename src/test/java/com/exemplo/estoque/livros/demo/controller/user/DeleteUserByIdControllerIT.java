@@ -2,6 +2,7 @@ package com.exemplo.estoque.livros.demo.controller.user;
 
 
 import com.exemplo.estoque.livros.demo.controller.UserController;
+import com.exemplo.estoque.livros.demo.exceptions.GenericError;
 import com.exemplo.estoque.livros.demo.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -69,14 +70,14 @@ public class DeleteUserByIdControllerIT {
 
     @Test
     public void testDeleteUserByIdGenericError(){
-        when(userRepository.existsById(any())).thenThrow(new RuntimeException());
+        when(userRepository.existsById(any())).thenThrow(new GenericError("Internal server error"));
 
 
         ResponseEntity<String> responseEntity = userController.deleteUserById(1L);
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
 
-        String expectedJson = "Erro: java.lang.RuntimeException";
+        String expectedJson = "Erro: com.exemplo.estoque.livros.demo.exceptions.GenericError: Internal server error";
         String actualJson = responseEntity.getBody();
 
         assertEquals(expectedJson, actualJson);

@@ -66,7 +66,7 @@ public class UserController {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Esse usuário não está cadastrado");
             }
 
-        } catch (RuntimeException e){
+        } catch (GenericError e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro: " + e);
         }
     }
