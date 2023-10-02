@@ -3,9 +3,9 @@ package com.exemplo.estoque.livros.demo.controller.user;
 
 import com.exemplo.estoque.livros.demo.controller.UserController;
 import com.exemplo.estoque.livros.demo.dto.DadosDeCadastroUser;
-import com.exemplo.estoque.livros.demo.dto.DadosDeCasdastroLivro;
-import com.exemplo.estoque.livros.demo.dto.Livro;
 import com.exemplo.estoque.livros.demo.dto.User;
+import com.exemplo.estoque.livros.demo.exceptions.GenericError;
+import com.exemplo.estoque.livros.demo.exceptions.runtime.ResourceNotFoundException;
 import com.exemplo.estoque.livros.demo.repository.UserRepository;
 import com.google.gson.GsonBuilder;
 import org.junit.jupiter.api.BeforeEach;
@@ -64,32 +64,32 @@ public class GetUserByIdControllerIT {
     @Test
     public void testGeUserByIDNotFoundError() {
 
-        when(userRepository.findById(1L)).thenReturn(null);
+        when(userRepository.findById(1L)).thenThrow(new ResourceNotFoundException(""));
 
         ResponseEntity<String> responseEntity = userController.getUserById(70L);
 
         assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
 
-        String expectedJson = "Erro: java.lang.RuntimeException";
+        String expectedJson = "Erro: com.exemplo.estoque.livros.demo.exceptions.runtime.ResourceNotFoundException: User not found";
         String actualJson = responseEntity.getBody();
 
-        assertEquals("Esse usuário não está cadastrado", actualJson );
+        assertEquals(expectedJson, actualJson );
         verify(userRepository).findById(70L);
 
     }
     @Test
     public void testGeUserByIDGenericError() throws RuntimeException {
 
-        when(userRepository.findById(any())).thenThrow(new RuntimeException());
+        when(userRepository.findById(any())).thenThrow(new GenericError("Internal server error"));
 
         ResponseEntity<String> responseEntity = userController.getUserById(70L);
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
 
-        String expectedJson = "Erro: java.lang.RuntimeException";
+        String expectedJson = "Erro: com.exemplo.estoque.livros.demo.exceptions.GenericError: Internal server error";
         String actualJson = responseEntity.getBody();
 
-        assertEquals("Erro: java.lang.RuntimeException", actualJson );
+        assertEquals(expectedJson, actualJson );
         verify(userRepository).findById(70L);
 
     }

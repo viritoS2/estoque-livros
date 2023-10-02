@@ -71,6 +71,7 @@ public class DeleteUserByIdControllerIT {
     public void testDeleteUserByIdGenericError(){
         when(userRepository.existsById(any())).thenThrow(new RuntimeException());
 
+
         ResponseEntity<String> responseEntity = userController.deleteUserById(1L);
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
