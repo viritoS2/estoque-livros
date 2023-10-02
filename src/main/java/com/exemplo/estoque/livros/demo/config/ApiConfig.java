@@ -17,6 +17,6 @@ public class ApiConfig {
                 .info(new Info().title("API de Livros")
                         .description("RestAPI com tema livros")
                         .version("1.0"))
-                .servers(Arrays.asList(new Server().url("http://localhost:8080-Generated server unl")));
+                .servers(Arrays.asList(new Server().url("http://localhost:8080")));
     }
 }
