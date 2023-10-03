@@ -100,8 +100,5 @@ public class UserController {
             catch (GenericError e){
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro: "+ e);
             }
-
-
-
     }
 }
