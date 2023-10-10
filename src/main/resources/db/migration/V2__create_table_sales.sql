@@ -1,0 +1,1 @@
+CREATE TABLE foods(nome varchar(255))
