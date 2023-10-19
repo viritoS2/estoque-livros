@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import java.util.Date;
 import java.util.UUID;
 
+@Entity
+@Table(name="sales")
 public class Sales {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
