@@ -9,7 +9,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "nome")
+    @Column(name = "name")
     private String nome;
     @Column(name = "email")
     private String email;
@@ -35,5 +35,4 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
-
 }
