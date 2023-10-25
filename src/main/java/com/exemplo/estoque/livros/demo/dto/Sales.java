@@ -2,6 +2,7 @@ package com.exemplo.estoque.livros.demo.dto;
 
 import jakarta.persistence.*;
 
+
 import java.util.Date;
 import java.util.UUID;
 
@@ -9,8 +10,9 @@ import java.util.UUID;
 @Table(name="sales")
 public class Sales {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "uuid", updatable = false, unique = true, nullable = false)
+    private UUID uuid;
     @Column(name = "book_id")
     private Long book_id;
 
@@ -18,7 +20,8 @@ public class Sales {
     private Long user_id;
 
     @Column(name = "sales_date")
-    private Long sales_date;
+    @Temporal(TemporalType.DATE)
+    private Date sales_date;
 
     @Column(name = "quantity")
     private Long quantity;
@@ -26,14 +29,17 @@ public class Sales {
     @Column(name = "total_cost")
     private Long total_cost;
 
-    private Date  now = new Date();
 
     public Sales(DadosDeCadastroSales dados){
-        this.id = dados.id();
         this.book_id = dados.book_id();
         this.user_id =dados.user_id();
-        this.sales_date = now.getTime();
+        this.sales_date = new Date();
         this.quantity = dados.quantity();
         this.total_cost = dados.total_cost();
+    }
+    public Sales(){};
+
+    public UUID getUUID() {
+        return this.uuid;
     }
 }
