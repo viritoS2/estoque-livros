@@ -1,0 +1,10 @@
+version: "2.23"
+
+services:
+  app:
+    build: ~/Dockerfile
+  postgres:
+    image: postgres
+    volumes:
+
+      - 
