@@ -1,8 +1,8 @@
 package com.exemplo.estoque.livros.demo.controller;
 
-import com.exemplo.estoque.livros.demo.dto.DadosDeCasdastroLivro;
-import com.exemplo.estoque.livros.demo.dto.Livro;
-import com.exemplo.estoque.livros.demo.repository.LivroRepository;
+import com.exemplo.estoque.livros.demo.dto.BookRegistrationData;
+import com.exemplo.estoque.livros.demo.dto.Book;
+import com.exemplo.estoque.livros.demo.repository.BookRepository;
 import com.google.gson.GsonBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,10 +28,10 @@ import static org.mockito.Mockito.when;
 public class LivroControllerIT {
 
     @InjectMocks
-    private LivroContoller livroController;
+    private BookContoller livroController;
 
     @Mock
-    private LivroRepository livroRepository;
+    private BookRepository livroRepository;
 
     @BeforeEach
     public void setUp() {
@@ -40,9 +40,9 @@ public class LivroControllerIT {
 
     @Test
     public void testGetLivro() {
-        List<Livro> livros = new ArrayList<>();
-        livros.add(new Livro(new DadosDeCasdastroLivro(1L, "Harry Potter", "J.K", 4L)));
-        livros.add(new Livro(new DadosDeCasdastroLivro(1L, "Harry Potter e a Ordem da Fenix", "J.K", 10L)));
+        List<Book> livros = new ArrayList<>();
+        livros.add(new Book(new BookRegistrationData(1L, "Harry Potter", "J.K", 4L)));
+        livros.add(new Book(new BookRegistrationData(1L, "Harry Potter e a Ordem da Fenix", "J.K", 10L)));
 
         when(livroRepository.findAll()).thenReturn(livros);
 
@@ -60,8 +60,8 @@ public class LivroControllerIT {
 
     @Test
     public void testGetLivroByID() {
-        DadosDeCasdastroLivro dados = new DadosDeCasdastroLivro(1L, "Harry Potter e a Ordem da Fenix", "J.K", 10L);
-        Livro livro = new Livro(dados);
+        BookRegistrationData dados = new BookRegistrationData(1L, "Harry Potter e a Ordem da Fenix", "J.K", 10L);
+        Book livro = new Book(dados);
 
         when(livroRepository.findById(any())).thenReturn(Optional.of(livro));
 
@@ -86,7 +86,7 @@ public class LivroControllerIT {
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
-        String expectedJson = "Deletado com sucesso";
+        String expectedJson = "Successfully deleted";
         String actualJson = responseEntity.getBody();
 
         assertEquals(expectedJson, actualJson);
@@ -98,21 +98,21 @@ public class LivroControllerIT {
     @Test
     public void testPostLivro() {
 
-        DadosDeCasdastroLivro dados = new DadosDeCasdastroLivro(1L, "Harry Potter", "J.K", 4L);
-        Livro livro = new Livro(dados);
+        BookRegistrationData dados = new BookRegistrationData(1L, "Harry Potter", "J.K", 4L);
+        Book livro = new Book(dados);
 
-        when(livroRepository.save(any(Livro.class))).thenReturn(livro);
+        when(livroRepository.save(any(Book.class))).thenReturn(livro);
 
         ResponseEntity<String> responseEntity = livroController.postLivro(dados);
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
-        String expectedJson = "Livro cadastradoLivro{id=1'nome=Harry Potter'autor=J.K'quantidade em estoque=4'}";
+        String expectedJson = "Livro cadastradoLivro{id=1'nome=Harry Potter'author=J.K'amount em estoque=4'}";
         String actualJson = responseEntity.getBody();
         assertEquals(expectedJson, actualJson);
 
 
-        verify(livroRepository).save(any(Livro.class));
+        verify(livroRepository).save(any(Book.class));
     }
 
 }

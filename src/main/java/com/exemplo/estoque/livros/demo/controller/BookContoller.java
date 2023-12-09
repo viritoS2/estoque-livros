@@ -1,8 +1,8 @@
 package com.exemplo.estoque.livros.demo.controller;
 
-import com.exemplo.estoque.livros.demo.dto.DadosDeCasdastroLivro;
-import com.exemplo.estoque.livros.demo.dto.Livro;
-import com.exemplo.estoque.livros.demo.repository.LivroRepository;
+import com.exemplo.estoque.livros.demo.dto.BookRegistrationData;
+import com.exemplo.estoque.livros.demo.dto.Book;
+import com.exemplo.estoque.livros.demo.repository.BookRepository;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -16,25 +16,25 @@ import java.util.List;
 import java.util.Optional;
 
 
-@Tag(name = "Livro Controller", description = "Controller do Livro")
+@Tag(name = "Livro Controller", description = "Controller of Book")
 @RestController()
 @RequestMapping("/livros")
 @Transactional
-public class LivroContoller {
+public class BookContoller {
 
     @Autowired
-    private  LivroRepository repository;
+    private BookRepository repository;
 
     private Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-    public LivroContoller(LivroRepository repository) {
+    public BookContoller(BookRepository repository) {
         this.repository = repository;
     }
 
     @GetMapping()
     public ResponseEntity<String> getLivros(){
-        List<Livro> livros = repository.findAll();
-        String json = gson.toJson(livros);
+        List<Book> books = repository.findAll();
+        String json = gson.toJson(books);
 
         return ResponseEntity.ok(json);
     }
@@ -43,14 +43,14 @@ public class LivroContoller {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<String> getLivroByID(@RequestParam(name = "id", required = true) Long id){
         try{
-            Optional<Livro> livroOptional = repository.findById(id);
-            Livro livro = livroOptional.orElse(null);
-            if( livro == null){throw new Exception("Livro não encontrado");}
-            String json = gson.toJson(livro);
+            Optional<Book> bookOptional = repository.findById(id);
+            Book book = bookOptional.orElse(null);
+            if( book == null){throw new Exception("Book not found");}
+            String json = gson.toJson(book);
 
             return ResponseEntity.ok(json);
         } catch (Exception e ){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Erro: " + e);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error: " + e);
         }
     }
 
@@ -60,24 +60,24 @@ public class LivroContoller {
         try{
             if (repository.existsById(id)){
                 repository.deleteById(id);
-                return ResponseEntity.ok("Deletado com sucesso");
+                return ResponseEntity.ok("Successfully deleted");
             } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Esse livro não está cadastrado");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("This book is not registered");
             }
         } catch (Exception e ){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro: " + e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e);
         }
     }
 
     @PostMapping()
     @RequestMapping(value = "/cadastro", method = RequestMethod.POST)
-    public ResponseEntity<String> postLivro(@RequestBody DadosDeCasdastroLivro dados){
+    public ResponseEntity<String> postLivro(@RequestBody BookRegistrationData dados){
         try {
-            var livro = new Livro(dados);
+            var livro = new Book(dados);
             repository.save(livro);
             return ResponseEntity.ok("Livro cadastrado" + livro);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocorreu algum erro ao tentar cadastrar o livro");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred when trying to register the book");
         }
     }
 }
