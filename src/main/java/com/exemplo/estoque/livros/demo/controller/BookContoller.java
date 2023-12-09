@@ -32,7 +32,7 @@ public class BookContoller {
     }
 
     @GetMapping()
-    public ResponseEntity<String> getLivros(){
+    public ResponseEntity<String> getBooks(){
         List<Book> books = repository.findAll();
         String json = gson.toJson(books);
 

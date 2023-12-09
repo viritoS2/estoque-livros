@@ -39,18 +39,18 @@ public class LivroControllerIT {
     }
 
     @Test
-    public void testGetLivro() {
-        List<Book> livros = new ArrayList<>();
-        livros.add(new Book(new BookRegistrationData(1L, "Harry Potter", "J.K", 4L)));
-        livros.add(new Book(new BookRegistrationData(1L, "Harry Potter e a Ordem da Fenix", "J.K", 10L)));
+    public void testGetBook() {
+        List<Book> booksList = new ArrayList<>();
+        booksList.add(new Book(new BookRegistrationData(1L, "Harry Potter", "J.K", 4L)));
+        booksList.add(new Book(new BookRegistrationData(1L, "Harry Potter e a Ordem da Fenix", "J.K", 10L)));
 
-        when(livroRepository.findAll()).thenReturn(livros);
+        when(livroRepository.findAll()).thenReturn(booksList);
 
-        ResponseEntity<String> responseEntity = livroController.getLivros();
+        ResponseEntity<String> responseEntity = livroController.getBooks();
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
-        String expectedJson = new GsonBuilder().setPrettyPrinting().create().toJson(livros);
+        String expectedJson = new GsonBuilder().setPrettyPrinting().create().toJson(booksList);
         String actualJson = responseEntity.getBody();
 
         assertEquals(expectedJson, actualJson);
@@ -59,17 +59,17 @@ public class LivroControllerIT {
     }
 
     @Test
-    public void testGetLivroByID() {
+    public void testGetBookByID() {
         BookRegistrationData dados = new BookRegistrationData(1L, "Harry Potter e a Ordem da Fenix", "J.K", 10L);
-        Book livro = new Book(dados);
+        Book book = new Book(dados);
 
-        when(livroRepository.findById(any())).thenReturn(Optional.of(livro));
+        when(livroRepository.findById(any())).thenReturn(Optional.of(book));
 
         ResponseEntity<String> responseEntity = livroController.getLivroByID(1L);
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
-        String expectedJson = new GsonBuilder().setPrettyPrinting().create().toJson(livro);
+        String expectedJson = new GsonBuilder().setPrettyPrinting().create().toJson(book);
         String actualJson = responseEntity.getBody();
 
         assertEquals(expectedJson, actualJson);
@@ -78,7 +78,7 @@ public class LivroControllerIT {
     }
 
     @Test
-    public void testDeleteLivro() {
+    public void testDeleteBook() {
         Long id = 1L;
         when(livroRepository.existsById(id)).thenReturn(true);
 
@@ -96,12 +96,12 @@ public class LivroControllerIT {
     }
 
     @Test
-    public void testPostLivro() {
+    public void testPostBook() {
 
         BookRegistrationData dados = new BookRegistrationData(1L, "Harry Potter", "J.K", 4L);
-        Book livro = new Book(dados);
+        Book book = new Book(dados);
 
-        when(livroRepository.save(any(Book.class))).thenReturn(livro);
+        when(livroRepository.save(any(Book.class))).thenReturn(book);
 
         ResponseEntity<String> responseEntity = livroController.postLivro(dados);
 
