@@ -3,7 +3,7 @@ package com.exemplo.estoque.livros.demo.dto;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name="livros")
+@Table(name="books")
 public class Livro {
 
     @Id
