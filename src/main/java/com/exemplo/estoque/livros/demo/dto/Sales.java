@@ -4,15 +4,14 @@ import jakarta.persistence.*;
 
 
 import java.util.Date;
-import java.util.UUID;
 
 @Entity
 @Table(name="sales")
 public class Sales {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "uuid", updatable = false, unique = true, nullable = false)
-    private UUID uuid;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "uuid")
+    private Long uuid;
     @Column(name = "book_id")
     private Long book_id;
 
@@ -38,8 +37,4 @@ public class Sales {
         this.total_cost = dados.total_cost();
     }
     public Sales(){};
-
-    public UUID getUUID() {
-        return this.uuid;
-    }
 }
