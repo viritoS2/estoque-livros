@@ -34,11 +34,15 @@ public class SalesController {
 
     private Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-    @GetMapping
+     @GetMapping
      public ResponseEntity<String> getSales(){
-            List<Sales> listOfSales = salesRepository.findAll();
+           try{
+               List<Sales> listOfSales = salesRepository.findAll();
+               return ResponseEntity.ok(gson.toJson(listOfSales));
+           } catch (Exception e){
+               return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocorreu um erro inesperado");
+           }
 
-        return ResponseEntity.ok(gson.toJson(listOfSales));
      }
 
      @PostMapping
@@ -57,4 +61,6 @@ public class SalesController {
              return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocorreu um erro inesperado");
          }
      }
+
+
 }
