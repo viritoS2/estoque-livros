@@ -16,7 +16,8 @@ maven. O objetivo deste projeto era praticar meus conhecimentos com Junit, mas a
 
 Para executar este projeto, você precisará ter instalado em sua máquina:
 - Docker version 25.0.2
-- Apache Maven 3.6.3
+- Apache Maven version 3.6.3
+- docker-compose version 1.29.2
 
 ### Passos para Execução
 
