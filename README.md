@@ -3,7 +3,7 @@
 ## Sobre o Projeto
 
 Este projeto é um exemplo prático de um sistema CRUD (Create, Read, Update, Delete) desenvolvido em Java, utilizando tecnlogias como
-maven. O objetivo deste projeto era praticar meus conhecimentos com Junit, mas acabei adiconar novas tecnologias como docker e flyway para migrações de banco de dados durante o desenvolvimento.
+maven e spring. O objetivo deste projeto era praticar meus conhecimentos com Junit, mas acabei adiconando novas tecnologias como docker para facilitar a execução do projeto em outros sistemas operacionais, e flyway para migrações de banco de dados durante o desenvolvimento.
 
 ## Funcionalidades
 
