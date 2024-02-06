@@ -12,7 +12,7 @@ maven e spring. O objetivo deste projeto era praticar meus conhecimentos com Jun
 - **Atualização de registros**: Modifica dados existentes no banco de dados.
 - **Exclusão de registros**: Remove dados do banco de dados.
 
-## Como Executar
+## Dependências do Projeto
 
 Para executar este projeto, você precisará ter instalado em sua máquina:
 - Docker version 25.0.2
