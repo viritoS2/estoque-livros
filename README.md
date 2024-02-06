@@ -24,6 +24,7 @@ Para executar este projeto, você precisará ter instalado em sua máquina:
 1. **Clone o Repositório**: git clone https://github.com/viritoS2/estoque-livros
 2. **Importe o Projeto**: Abra o projeto em sua IDE de preferência (recomendado: IntelliJ IDEA).
 3. **Execute**: 
+- mvn clean install
 - docker build -t app_livro .
 - docker-compose up -d 
 4. **Acessando Swagger**:
