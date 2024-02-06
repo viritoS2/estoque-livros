@@ -3,9 +3,7 @@ package com.exemplo.estoque.livros.demo.controller.sales;
 
 import com.exemplo.estoque.livros.demo.controller.SalesController;
 import com.exemplo.estoque.livros.demo.dto.DadosDeCadastroSales;
-import com.exemplo.estoque.livros.demo.dto.DadosDeCadastroUser;
 import com.exemplo.estoque.livros.demo.dto.Sales;
-import com.exemplo.estoque.livros.demo.dto.User;
 import com.exemplo.estoque.livros.demo.exceptions.GenericError;
 import com.exemplo.estoque.livros.demo.repository.SalesRepository;
 import com.google.gson.GsonBuilder;
