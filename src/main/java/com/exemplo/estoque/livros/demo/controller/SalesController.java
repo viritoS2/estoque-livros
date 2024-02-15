@@ -26,6 +26,7 @@ public class SalesController {
     private LivroRepository bookRepository;
     @Autowired
     private UserRepository userRepository;
+ 
     public SalesController(SalesRepository salesRepository, LivroRepository bookRepository, UserRepository userRepository){
         this.salesRepository = salesRepository;
         this.bookRepository = bookRepository;
@@ -45,6 +46,16 @@ public class SalesController {
 
      }
 
+    @GetMapping("/{userId}")
+    public ResponseEntity<String> getSalesByUser(@RequestParam Long userId){
+        try {
+            List<Sales> listOfSales = salesRepository.findByUserId(userId);
+            return ResponseEntity.ok(gson.toJson(listOfSales));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocorreu um erro inesperado");
+        }
+    }
+
      @PostMapping
      @RequestMapping(method =  RequestMethod.POST)
      public ResponseEntity<String> postSales(@RequestBody DadosDeCadastroSales dados) {
@@ -61,6 +72,4 @@ public class SalesController {
              return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocorreu um erro inesperado");
          }
      }
-
-
 }
