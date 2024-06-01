@@ -3,8 +3,7 @@ package com.exemplo.estoque.livros.demo.controller.user;
 import com.exemplo.estoque.livros.demo.controller.UserController;
 import com.exemplo.estoque.livros.demo.dto.DadosDeCadastroUser;
 import com.exemplo.estoque.livros.demo.dto.User;
-import com.exemplo.estoque.livros.demo.exceptions.GenericError;
-import com.exemplo.estoque.livros.demo.exceptions.runtime.ResourceNotFoundException;
+import com.exemplo.estoque.livros.demo.handlers.user.ResourceNotFoundException;
 import com.exemplo.estoque.livros.demo.repository.UserRepository;
 import com.google.gson.GsonBuilder;
 import org.junit.jupiter.api.BeforeEach;
@@ -66,7 +65,7 @@ public class UpdateUser {
         ResponseEntity<String> response = userController.updateUser(1L, new DadosDeCadastroUser(1L, "Vitor", "vitor@gmail.com"));
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        String expectedJson = "Erro: com.exemplo.estoque.livros.demo.exceptions.runtime.ResourceNotFoundException: User not found";
+        String expectedJson = "Erro: com.exemplo.estoque.livros.demo.handlers.user.ResourceNotFoundException: User not found";
         String json = response.getBody();
         assertEquals(expectedJson, json);
         verify(userRepository).findById(any(Long.class));
@@ -74,7 +73,7 @@ public class UpdateUser {
 
     @Test
     public void userUpdateGenericError(){
-        when(userRepository.findById(any())).thenThrow(new GenericError("Ocurred an error"));
+        when(userRepository.findById(any())).thenThrow(new RuntimeException("Ocurred an error"));
         ResponseEntity<String> response = userController.updateUser(1L,new DadosDeCadastroUser(1L, "Vitor", "vitor@gmail.com"));
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
 
