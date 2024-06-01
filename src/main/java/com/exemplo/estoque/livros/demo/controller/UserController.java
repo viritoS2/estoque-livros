@@ -2,8 +2,7 @@ package com.exemplo.estoque.livros.demo.controller;
 
 import com.exemplo.estoque.livros.demo.dto.DadosDeCadastroUser;
 import com.exemplo.estoque.livros.demo.dto.User;
-import com.exemplo.estoque.livros.demo.exceptions.GenericError;
-import com.exemplo.estoque.livros.demo.exceptions.runtime.ResourceNotFoundException;
+import com.exemplo.estoque.livros.demo.handlers.user.UserNotFoundException;
 import com.exemplo.estoque.livros.demo.repository.UserRepository;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -29,6 +28,10 @@ public class UserController {
 
     private Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
+    public UserController(UserRepository userRepository){
+        this.userRepository = userRepository;
+    }
+
     @GetMapping
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<String> getUsers(){
@@ -37,37 +40,37 @@ public class UserController {
             String json = gson.toJson(listaDeUsers);
             return ResponseEntity.ok(json);
         } catch (Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            throw new RuntimeException(e.getMessage());
         }
     }
 
-    @GetMapping("/user")
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<String> getUserById(@RequestParam(name = "id", required = true) Long id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<String> getUserById(@PathVariable(name = "id", required = true) Long id) {
         try{
-            User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+            User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
             String json = gson.toJson(user);
             return ResponseEntity.ok(json);
-        } catch (ResourceNotFoundException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Erro: " + e);
-        }   catch (GenericError e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro: " + e);
+        } catch (UserNotFoundException ex){
+            throw new UserNotFoundException(ex.getMessage());
+        }   catch (Exception e){
+            throw new RuntimeException("Internal server error");
         }
     }
 
-    @DeleteMapping("/user")
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<String> deleteUserById(@RequestParam(name = "id", required = true)  Long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteUserById(@PathVariable(name = "id", required = true)  Long id) {
         try{
             if(userRepository.existsById(id)){
                 userRepository.deleteById(id);
-            return ResponseEntity.ok("Usuario deletado com sucesso");}
+            return ResponseEntity.ok("Usuário deletado com sucesso");}
             else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Esse usuário não está cadastrado");
+                throw  new UserNotFoundException("Usuário não encontrado");
             }
-
-        } catch (GenericError e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro: " + e);
+        } catch (UserNotFoundException ex){
+            throw new UserNotFoundException(ex.getMessage());
+        }
+        catch (Exception e){
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -85,19 +88,19 @@ public class UserController {
 
     @PutMapping
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
-    public ResponseEntity<String> updateUser(@RequestParam(name = "id", required = true)  Long id,
+    public ResponseEntity<String> updateUser(@PathVariable(name = "id", required = true)  Long id,
                                             @RequestBody DadosDeCadastroUser dadosUser){
 
             try{
-                User user = userRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("User não cadastrado"));
+                User user = userRepository.findById(id).orElseThrow(()-> new UserNotFoundException("User não cadastrado"));
                 user.setEmail(dadosUser.email());
                 userRepository.save(user);
             return  ResponseEntity.ok(gson.toJson(user));}
 
-            catch (ResourceNotFoundException e){
+            catch (UserNotFoundException e){
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Erro: "+ e);
             }
-            catch (GenericError e){
+            catch (Exception e){
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro: "+ e);
             }
     }
