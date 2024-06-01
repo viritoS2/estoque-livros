@@ -1,2 +1,0 @@
-ALTER TABLE `books`
-CHANGE COLUMN `nome` `name` VARCHAR(255) NOT NULL;
