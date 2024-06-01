@@ -1,4 +1,4 @@
-package com.exemplo.estoque.livros.demo.handlers;
+package com.exemplo.estoque.livros.demo.handlers.generic;
 
 public class InvalidParameters extends RuntimeException{
 
