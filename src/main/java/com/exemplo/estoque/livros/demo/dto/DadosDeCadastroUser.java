@@ -3,4 +3,4 @@ package com.exemplo.estoque.livros.demo.dto;
 import io.swagger.v3.oas.annotations.Hidden;
 
 @Hidden
-public record DadosDeCadastroUser(Long id, String nome, String email) {}
+public record DadosDeCadastroUser(Long id, String name, String email) {}
