@@ -58,8 +58,7 @@ public class BookController {
         }
     }
 
-    @DeleteMapping()
-    @RequestMapping(method = RequestMethod.DELETE)
+    @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteBookById(@PathVariable(name = "id", required = true) Long id){
         try{
             if (!(repository.existsById(id))){ throw new BookNotFound("Esse livro não está cadastrado");}
