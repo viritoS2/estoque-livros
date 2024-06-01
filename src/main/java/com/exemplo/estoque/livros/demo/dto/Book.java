@@ -5,17 +5,17 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name="books")
-public class Livro {
+public class Book {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String nome;
+    private String name;
     private String autor;
 
     private Long quantidade=0L;
 
-    public Livro(DadosDeCasdastroLivro dados) {
+    public Book(DadosDeCasdastroLivro dados) {
         if (dados.nome() == null) {
             throw new InvalidParameters("Nome não pode ser nulo");
         }
@@ -26,18 +26,50 @@ public class Livro {
             throw new InvalidParameters("Quantidade não pode ser nula");
         }
         this.id = dados.id();
-        this.nome = dados.nome();
+        this.name = dados.nome();
         this.autor = dados.autor();
         this.quantidade = dados.quantidade();
     }
 
-    public Livro(){};
+    public Book(){};
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getAutor() {
+        return autor;
+    }
+
+    public void setAutor(String autor) {
+        this.autor = autor;
+    }
+
+    public Long getQuantidade() {
+        return quantidade;
+    }
+
+    public void setQuantidade(Long quantidade) {
+        this.quantidade = quantidade;
+    }
 
     @Override
     public String toString() {
-        return "Livro{" +
+        return "Book{" +
                 "id=" + this.id + '\'' +
-                "nome=" + this.nome + '\'' +
+                "nome=" + this.name + '\'' +
                 "autor=" + this.autor + '\'' +
                 "quantidade em estoque=" + this.quantidade + '\'' +
                 '}';
