@@ -2,7 +2,7 @@ package com.exemplo.estoque.livros.demo.handlers;
 
 import com.exemplo.estoque.livros.demo.handlers.book.BookNotFound;
 import com.exemplo.estoque.livros.demo.handlers.generic.InvalidParameters;
-import com.exemplo.estoque.livros.demo.handlers.user.ResourceNotFoundException;
+import com.exemplo.estoque.livros.demo.handlers.user.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -19,8 +19,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler{
     @ExceptionHandler(BookNotFound.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
-    public ProblemDetail handlerBookNotFound(BookNotFound ex)
-    {
+    public ProblemDetail handlerBookNotFound(BookNotFound ex) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getLocalizedMessage());
         problemDetail.setTitle("Livro não encontrado");
         problemDetail.setDetail(ex.getMessage());
@@ -29,13 +28,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler{
         return problemDetail;
     }
 
-    @ExceptionHandler
+    @ExceptionHandler(UserNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ProblemDetail handlerResourceNotFound(ResourceNotFoundException ex){
+    public ProblemDetail handlerUserNotFound(UserNotFoundException ex){
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getLocalizedMessage());
         problemDetail.setTitle("Não encontrado");
         problemDetail.setDetail(ex.getMessage());
-        problemDetail.setProperty("Categoria", "Usuário");
+        problemDetail.setProperty("Categoria", "Users");
         problemDetail.setProperty("TimeStamp", Instant.now());
         return problemDetail;
     }
