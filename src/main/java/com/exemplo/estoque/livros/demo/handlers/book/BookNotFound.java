@@ -1,9 +1,9 @@
-package com.exemplo.estoque.livros.demo.handlers;
+package com.exemplo.estoque.livros.demo.handlers.book;
 
-public class NotFoundBook extends RuntimeException{
+public class BookNotFound extends RuntimeException{
 
-    public NotFoundBook(){}
-    public NotFoundBook(String message){
+    public BookNotFound(){}
+    public BookNotFound(String message){
         super(message);
     }
 }
