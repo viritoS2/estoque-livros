@@ -1,10 +1,11 @@
 package com.exemplo.estoque.livros.demo.controller;
 
+import com.exemplo.estoque.livros.demo.dto.Book;
 import com.exemplo.estoque.livros.demo.dto.DadosDeCasdastroLivro;
-import com.exemplo.estoque.livros.demo.dto.Livro;
 import com.exemplo.estoque.livros.demo.handlers.generic.InvalidParameters;
 import com.exemplo.estoque.livros.demo.handlers.book.BookNotFound;
-import com.exemplo.estoque.livros.demo.repository.LivroRepository;
+import com.exemplo.estoque.livros.demo.repository.BookRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -19,51 +20,47 @@ import java.util.List;
 import java.util.Optional;
 
 
-@Tag(name = "Livro Controller", description = "Controller do Livro")
+@Tag(name = "Book Controller", description = "Book of Controller")
 @RestController()
-@RequestMapping("/livros")
-public class LivroContoller {
+@RequestMapping("/books")
+public class BookController {
 
-    private static final Logger log = LoggerFactory.getLogger(LivroContoller.class);
+    private static final Logger log = LoggerFactory.getLogger(BookController.class);
     @Autowired
-    private  LivroRepository repository;
+    private BookRepository repository;
 
     private Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-    public LivroContoller(LivroRepository repository) {
+    public BookController(BookRepository repository) {
         this.repository = repository;
     }
 
     @GetMapping()
-    public ResponseEntity<String> getLivros(){
-        List<Livro> livros = repository.findAll();
-        String json = gson.toJson(livros);
+    public ResponseEntity<String> getBookList(){
+        List<Book> books = repository.findAll();
+        String json = gson.toJson(books);
         return ResponseEntity.ok(json);
     }
 
-    @GetMapping()
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<String> getLivroByID(@PathVariable(name = "id", required = true) Long id){
+    @GetMapping("/{id}")
+    public ResponseEntity<String> getBookById(@PathVariable(name = "id", required = true) Long id){
         try{
             if(!(repository.existsById(id))){
-                throw new BookNotFound("Esse livro está não cadastrado");
+                throw new BookNotFound("Esse livro não está cadastrado");
             }
-            Optional<Livro> livro = repository.findById(id);
-            var livroS = (Livro) livro.orElse(null);
-            String json = gson.toJson(livroS);
-
+            Optional<Book> book = repository.findById(id);
+            String json = gson.toJson(book.orElse(null));
             return ResponseEntity.ok(json);
-
         } catch (BookNotFound e ){
             throw new BookNotFound(e.getMessage());
         } catch (Exception e){
-           throw new RuntimeException("Internal server error");
+            throw new RuntimeException("Internal server error");
         }
     }
 
     @DeleteMapping()
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<String> deleteLivroByID(@RequestParam(name = "id", required = true) Long id){
+    @RequestMapping(method = RequestMethod.DELETE)
+    public ResponseEntity<String> deleteBookById(@PathVariable(name = "id", required = true) Long id){
         try{
             if (!(repository.existsById(id))){ throw new BookNotFound("Esse livro não está cadastrado");}
 
@@ -76,17 +73,14 @@ public class LivroContoller {
 
     @PostMapping()
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<String> postLivro(@RequestBody DadosDeCasdastroLivro dados) {
-        try{
-            Livro livro = new Livro(dados);
-            repository.save(livro);
-        } catch (InvalidParameters e){
-           throw new InvalidParameters(e.getMessage());
-        } catch (Exception e){
+    public ResponseEntity<String> postBook(@RequestBody DadosDeCasdastroLivro dados) {
+        try {
+            Book book = new Book(dados);
+            repository.save(book);
+            return new ResponseEntity<>("Livro cadastrado com sucesso", HttpStatus.CREATED);
+        } catch (InvalidParameters e) {
+            throw new InvalidParameters(e.getMessage());
+        } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
-
-        return new ResponseEntity<String>("Livro cadastrado", HttpStatus.OK);
-
-    }
-}
+}}
