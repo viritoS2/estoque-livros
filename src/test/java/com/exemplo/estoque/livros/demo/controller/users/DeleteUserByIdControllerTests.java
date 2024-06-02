@@ -50,7 +50,6 @@ public class DeleteUserByIdControllerTests {
         mvc.perform(delete("/users/{id}", 2)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
-
                 .andExpect(jsonPath("$.title").value("Não encontrado"))
                 .andExpect(jsonPath("$.detail").value("Usuário não encontrado"))
                 .andExpect(jsonPath("$.instance").value("/users/2"))
