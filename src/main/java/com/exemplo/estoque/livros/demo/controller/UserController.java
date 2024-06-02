@@ -75,22 +75,19 @@ public class UserController {
     }
 
     @PostMapping
-    @RequestMapping(value = "/cadastro", method = RequestMethod.POST)
-    public ResponseEntity<String> cadastraUser(@RequestBody DadosDeCadastroUser dados){
+    public ResponseEntity<String> postUser(@RequestBody DadosDeCadastroUser dados){
         try{
              User newUser = new User(dados);
              userRepository.save(newUser);
-            return ResponseEntity.ok("Cadastrado com sucesso");
+            return ResponseEntity.status(HttpStatus.CREATED).body(null);
         } catch (Exception e){
-            return  ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            throw new RuntimeException("Internal server error");
         }
     }
 
-    @PutMapping
-    @RequestMapping(value = "/update", method = RequestMethod.PUT)
+    @PutMapping("/{id}")
     public ResponseEntity<String> updateUser(@PathVariable(name = "id", required = true)  Long id,
                                             @RequestBody DadosDeCadastroUser dadosUser){
-
             try{
                 User user = userRepository.findById(id).orElseThrow(()-> new UserNotFoundException("User não cadastrado"));
                 user.setEmail(dadosUser.email());
@@ -98,10 +95,10 @@ public class UserController {
             return  ResponseEntity.ok(gson.toJson(user));}
 
             catch (UserNotFoundException e){
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Erro: "+ e);
+                throw new UserNotFoundException("Usuário não encontrado");
             }
             catch (Exception e){
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro: "+ e);
+                throw new RuntimeException("Internal server error");
             }
     }
 }
