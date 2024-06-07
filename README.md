@@ -21,7 +21,7 @@ Para executar este projeto, você precisará ter instalado em sua máquina:
 
 ### Passos para Execução
 
-1. **Clone o Repositório**: git clone https://github.com/viritoS2/estoque-livros
+1. **Clone o Repositório**: git clone https://github.com/viritoS2/estoque-books
 2. **Importe o Projeto**: Abra o projeto em sua IDE de preferência (recomendado: IntelliJ IDEA).
 3. **Execute na raiz do Projeto**: 
 - mvn clean install
