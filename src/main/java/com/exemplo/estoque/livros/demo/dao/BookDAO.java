@@ -8,8 +8,7 @@ public interface BookDAO {
 
     List<Book> getAllBooks();
     Book getBookById(Long id);
-    Book saveBook(Book book);
-    void deleteBook(Long id);
-    Boolean findById(Long id);
+    Book save(Book book);
+    void deleteBookById(Long id);
     Boolean existsById(Long id);
 }
