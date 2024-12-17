@@ -28,16 +28,12 @@ public class BookService {
         return bookDAO.getBookById(id);
     }
 
-    public Book saveBook(Book book){
-        return bookDAO.saveBook(book);
+    public Book save(Book book){
+        return bookDAO.save(book);
     }
 
-    public void deleteBook(Long id){
-        bookDAO.deleteBook(id);
-    }
-
-    public Boolean findById(Long id) {
-        return bookDAO.findById(id);
+    public void deleteBookById(Long id){
+        bookDAO.deleteBookById(id);
     }
 
     public Boolean existsById(Long id) {
