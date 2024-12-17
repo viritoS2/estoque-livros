@@ -5,9 +5,11 @@ import com.exemplo.estoque.livros.demo.dto.DadosDeCadastroUser;
 import com.exemplo.estoque.livros.demo.dto.User;
 import com.exemplo.estoque.livros.demo.handlers.user.UserNotFoundException;
 import com.exemplo.estoque.livros.demo.repository.UserRepository;
+import com.exemplo.estoque.livros.demo.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -29,8 +31,9 @@ public class GetUserByIdControllerTests {
     @InjectMocks
     private UserController userController;
 
+
     @MockBean
-    private UserRepository userRepository;
+    private UserService userService;
 
     @Autowired
     private MockMvc mvc;
@@ -44,7 +47,7 @@ public class GetUserByIdControllerTests {
     public void testGeUserByIDSuccess() throws Exception {
         User user = new User(new DadosDeCadastroUser(90L, "Vitor", "vitor@gmail.com"));
 
-        when(userRepository.findById(90L)).thenReturn(Optional.of(user));
+        when(userService.getUserById(90L)).thenReturn(user);
 
         mvc.perform(get("/users/{id}", 90)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -56,7 +59,7 @@ public class GetUserByIdControllerTests {
     @Test
     public void testGeUserByIDNotFoundError() throws Exception {
 
-        when(userRepository.findById(1L)).thenThrow(new UserNotFoundException("Usuário não encontrado"));
+        when(userService.getUserById(1L)).thenThrow(new UserNotFoundException("Usuário não encontrado"));
 
         mvc.perform(get("/users/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -69,7 +72,7 @@ public class GetUserByIdControllerTests {
 
     @Test
     public void testGeUserByIdInternalServerError() throws Exception {
-        when(userRepository.findById(any())).thenThrow(new RuntimeException("Internal server error"));
+        when(userService.getUserById(any())).thenThrow(new RuntimeException("Internal server error"));
         mvc.perform(get("/users/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isInternalServerError())

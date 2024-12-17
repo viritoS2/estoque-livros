@@ -2,6 +2,7 @@ package com.exemplo.estoque.livros.demo.controller.users;
 
 import com.exemplo.estoque.livros.demo.controller.UserController;
 import com.exemplo.estoque.livros.demo.repository.UserRepository;
+import com.exemplo.estoque.livros.demo.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -23,8 +24,9 @@ public class DeleteUserByIdControllerTests {
     @InjectMocks
     private UserController userController;
 
+
     @MockBean
-    private UserRepository userRepository;
+    private UserService userService;
 
     @Autowired
     private MockMvc mvc;
@@ -36,7 +38,7 @@ public class DeleteUserByIdControllerTests {
 
     @Test
     public void testDeleteUserById() throws Exception {
-        when(userRepository.existsById(any())).thenReturn(true);
+        when(userService.existsById(any())).thenReturn(true);
         mvc.perform(delete("/users/{id}", 2)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -45,7 +47,7 @@ public class DeleteUserByIdControllerTests {
 
     @Test
     public void testDeleteUserByIdUserNotFoundError() throws Exception {
-        when(userRepository.existsById(any())).thenReturn(false);
+        when(userService.existsById(any())).thenReturn(false);
 
         mvc.perform(delete("/users/{id}", 2)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -58,7 +60,7 @@ public class DeleteUserByIdControllerTests {
 
     @Test
     public void testDeleteUserByIdInternalError() throws Exception {
-        when(userRepository.existsById(any())).thenThrow(new RuntimeException("Internal server error"));
+        when(userService.existsById(any())).thenThrow(new RuntimeException("Internal server error"));
         mvc.perform(delete("/users/{id}",1)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isInternalServerError())

@@ -5,6 +5,7 @@ import com.exemplo.estoque.livros.demo.dto.DadosDeCadastroUser;
 import com.exemplo.estoque.livros.demo.dto.User;
 import com.exemplo.estoque.livros.demo.handlers.user.UserNotFoundException;
 import com.exemplo.estoque.livros.demo.repository.UserRepository;
+import com.exemplo.estoque.livros.demo.service.UserService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -32,7 +33,7 @@ public class PutUserTests {
     private UserController userController;
 
     @MockBean
-    private UserRepository userRepository;
+    private UserService userService;
 
     @Autowired
     private MockMvc mvc;
@@ -53,14 +54,14 @@ public class PutUserTests {
         user.setId(1L);
         user.setName("John Doe");
         user.setEmail("email@example.com");
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(userService.getUserById(1L)).thenReturn(user);
         mvc.perform(put("/users/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.email").value("johndoe@example.com"));
-        verify(userRepository, times(1)).save(user);
+        verify(userService, times(1)).save(user);
     }
     @Test
     public void userUpdateUserNotFoundError() throws Exception {
@@ -70,7 +71,7 @@ public class PutUserTests {
         ObjectNode emailNode = mapper.createObjectNode();
         emailNode.set("email", node.get("email"));
         String json = mapper.writeValueAsString(emailNode);
-        when(userRepository.findById(1L)).thenThrow(new UserNotFoundException());
+        when(userService.getUserById(1L)).thenThrow(new UserNotFoundException());
         mvc.perform(put("/users/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
@@ -89,7 +90,7 @@ public class PutUserTests {
         ObjectNode emailNode = mapper.createObjectNode();
         emailNode.set("email", node.get("email"));
         String json = mapper.writeValueAsString(emailNode);
-        when(userRepository.findById(1L)).thenThrow(new RuntimeException());
+        when(userService.getUserById(1L)).thenThrow(new RuntimeException());
         mvc.perform(put("/users/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
