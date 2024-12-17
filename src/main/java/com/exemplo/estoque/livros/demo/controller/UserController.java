@@ -3,8 +3,6 @@ package com.exemplo.estoque.livros.demo.controller;
 import com.exemplo.estoque.livros.demo.dto.DadosDeCadastroUser;
 import com.exemplo.estoque.livros.demo.dto.User;
 import com.exemplo.estoque.livros.demo.handlers.user.UserNotFoundException;
-import com.exemplo.estoque.livros.demo.repository.UserImpl;
-import com.exemplo.estoque.livros.demo.repository.UserRepository;
 import com.exemplo.estoque.livros.demo.service.UserService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
