@@ -1,19 +1,10 @@
 package com.exemplo.estoque.livros.demo.dto;
 
-import jakarta.persistence.*;
-
-@Entity
-@Table(name="users")
 public class User {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "name")
     private String name;
-    @Column(name = "email")
     private String email;
-
 
     public User (DadosDeCadastroUser dados){
         this.id = dados.id();
@@ -21,7 +12,16 @@ public class User {
         this.email = dados.email();
     }
 
-    public User(){}
+    public User(){};
+    public User (String email){
+        this.email = email;
+    }
+
+    public User(long generatedId, String name, String email) {
+        this.id = generatedId;
+        this.name = name;
+        this.email = email;
+    }
 
     public String getName() {
         return name;
