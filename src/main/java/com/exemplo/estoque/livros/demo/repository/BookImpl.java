@@ -28,10 +28,9 @@ public class BookImpl implements BookDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-
     @Override
     public List<Book> getAllBooks() {
-        String sql = "SELECT * FROM books";
+        String sql = "SELECT id, name, autor FROM books";
         return jdbcTemplate.query(sql, new BookRowMapper());
     }
 
@@ -51,7 +50,7 @@ public class BookImpl implements BookDAO {
     }
 
     @Override
-    public Book saveBook(Book book) {
+    public Book save(Book book) {
         String sql =  "INSERT INTO books (nome, autor, quantidade) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
@@ -67,16 +66,9 @@ public class BookImpl implements BookDAO {
     }
 
     @Override
-    public void deleteBook(Long id) {
+    public void deleteBookById(Long id) {
         String sql = "DELETE FROM books WHERE id = ?";
         jdbcTemplate.update(sql, id);
-    }
-
-    @Override
-    public Boolean findById(Long id) {
-        String sql = "SELECT COUNT(*) FROM books WHERE id = ?";
-        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, id);
-        return count > 0;
     }
 
     @Override
