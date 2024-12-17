@@ -3,7 +3,7 @@ package com.exemplo.estoque.livros.demo.controller.users;
 import com.exemplo.estoque.livros.demo.controller.UserController;
 import com.exemplo.estoque.livros.demo.dto.DadosDeCadastroUser;
 import com.exemplo.estoque.livros.demo.dto.User;
-import com.exemplo.estoque.livros.demo.repository.UserRepository;
+import com.exemplo.estoque.livros.demo.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,7 +29,7 @@ public class PostUserControllerTests {
     private UserController userController;
 
     @MockBean
-    private UserRepository userRepository;
+    private UserService userService;
 
     @Autowired
     private MockMvc mvc;
@@ -45,7 +45,7 @@ public class PostUserControllerTests {
         User user = new User(dados);
         ObjectMapper mapper = new ObjectMapper();
         String json = mapper.writeValueAsString(dados);
-        when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
+        when(userService.save(Mockito.any(User.class))).thenReturn(user);
 
         mvc.perform(post("/users")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -60,7 +60,7 @@ public class PostUserControllerTests {
         ObjectMapper mapper = new ObjectMapper();
         String json = mapper.writeValueAsString(dados);
 
-        when(userRepository.save(any(User.class))).thenThrow(new RuntimeException());
+        when(userService.save(any(User.class))).thenThrow(new RuntimeException());
         mvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))

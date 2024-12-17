@@ -3,7 +3,7 @@ package com.exemplo.estoque.livros.demo.controller.books;
 import com.exemplo.estoque.livros.demo.controller.BookController;
 import com.exemplo.estoque.livros.demo.dto.Book;
 import com.exemplo.estoque.livros.demo.dto.DadosDeCasdastroLivro;
-import com.exemplo.estoque.livros.demo.repository.BookRepository;
+import com.exemplo.estoque.livros.demo.service.BookService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -13,8 +13,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.Optional;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.when;
@@ -32,7 +30,7 @@ public class DeleteBookByIdTests {
     private BookController livroController;
 
     @MockBean
-    private BookRepository bookRepository;
+    private BookService bookService;
 
     @BeforeEach
     public void setUp() {
@@ -42,8 +40,8 @@ public class DeleteBookByIdTests {
     @Test
     public void testDeleteBookByIdSuccess() throws Exception {
         Book book = new Book(new DadosDeCasdastroLivro(2L, "Harry Potter e a Ordem da Fenix", "J.K", 10L));
-        when(bookRepository.existsById(2L)).thenReturn(true);
-        when(bookRepository.findById(2L)).thenReturn(Optional.of(book));
+        when(bookService.existsById(2L)).thenReturn(true);
+        when(bookService.getBookById(2L)).thenReturn(book);
         mockMvc.perform(delete("/books/{id}", 2)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -52,7 +50,7 @@ public class DeleteBookByIdTests {
 
     @Test
     public void testDeleteBookByIdNotFound() throws Exception {
-        when(bookRepository.existsById(3L)).thenReturn(false);
+        when(bookService.existsById(3L)).thenReturn(false);
         mockMvc.perform(get("/books/{id}", 2)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
@@ -65,8 +63,8 @@ public class DeleteBookByIdTests {
     @Test
     public void testDeleteBookByIdInternalError() throws Exception {
         Book book = new Book(new DadosDeCasdastroLivro(2L, "Harry Potter e a Ordem da Fenix", "J.K", 10L));
-        when(bookRepository.existsById(2L)).thenReturn(true);
-        when(bookRepository.findById(2L)).thenThrow(new RuntimeException());
+        when(bookService.existsById(2L)).thenReturn(true);
+        when(bookService.getBookById(2L)).thenThrow(new RuntimeException());
         mockMvc.perform(get("/books/{id}", 2)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isInternalServerError())

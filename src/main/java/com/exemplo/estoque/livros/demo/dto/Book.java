@@ -1,18 +1,13 @@
 package com.exemplo.estoque.livros.demo.dto;
 
 import com.exemplo.estoque.livros.demo.handlers.generic.InvalidParameters;
-import jakarta.persistence.*;
 
-@Entity
-@Table(name="books")
+
 public class Book {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String autor;
-
     private Long quantidade=0L;
 
     public Book(DadosDeCasdastroLivro dados) {
@@ -25,13 +20,19 @@ public class Book {
         if (dados.quantidade() == null) {
             throw new InvalidParameters("Quantidade não pode ser nula");
         }
-        this.id = dados.id();
         this.name = dados.nome();
         this.autor = dados.autor();
         this.quantidade = dados.quantidade();
     }
 
     public Book(){};
+
+    public Book(Long id, String nome, String autor, long quantidade) {
+        this.id = id;
+        this.name = nome;
+        this.autor = autor;
+        this.quantidade = quantidade;
+    }
 
     public Long getId() {
         return id;

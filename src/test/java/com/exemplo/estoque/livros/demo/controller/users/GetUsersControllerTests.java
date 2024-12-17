@@ -3,7 +3,7 @@ package com.exemplo.estoque.livros.demo.controller.users;
 import com.exemplo.estoque.livros.demo.controller.UserController;
 import com.exemplo.estoque.livros.demo.dto.DadosDeCadastroUser;
 import com.exemplo.estoque.livros.demo.dto.User;
-import com.exemplo.estoque.livros.demo.repository.UserRepository;
+import com.exemplo.estoque.livros.demo.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -28,8 +28,9 @@ public class GetUsersControllerTests {
     @InjectMocks
     private UserController userController;
 
+
     @MockBean
-    private UserRepository userRepository;
+    private UserService userService;
 
     @Autowired
     private MockMvc mvc;
@@ -44,7 +45,7 @@ public class GetUsersControllerTests {
         List<User> listOfUsers = new ArrayList<>();
         listOfUsers.add(new User(new DadosDeCadastroUser(90L, "Vitor", "vitor@gmail.com")));
         listOfUsers.add(new User(new DadosDeCadastroUser(40L, "Erlando", "erlando@gmail.com")));
-        when(userRepository.findAll()).thenReturn(listOfUsers);
+        when(userService.getAllUsers()).thenReturn(listOfUsers);
         mvc.perform(get("/users")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -56,7 +57,7 @@ public class GetUsersControllerTests {
 
     @Test
     public void testGetUserGenericError() throws Exception {
-        when(userRepository.findAll()).thenThrow(new RuntimeException("Internal server error"));
+        when(userService.getAllUsers()).thenThrow(new RuntimeException("Internal server error"));
         mvc.perform(get("/users")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isInternalServerError())
