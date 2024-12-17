@@ -2,10 +2,10 @@ package com.exemplo.estoque.livros.demo.controller;
 
 import com.exemplo.estoque.livros.demo.dto.Book;
 import com.exemplo.estoque.livros.demo.dto.DadosDeCasdastroLivro;
-import com.exemplo.estoque.livros.demo.handlers.generic.InvalidParameters;
 import com.exemplo.estoque.livros.demo.handlers.book.BookNotFound;
-import com.exemplo.estoque.livros.demo.repository.BookRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.exemplo.estoque.livros.demo.handlers.generic.InternalServerError;
+import com.exemplo.estoque.livros.demo.handlers.generic.InvalidParameters;
+import com.exemplo.estoque.livros.demo.service.BookService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -17,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 
 @Tag(name = "Book Controller", description = "Book of Controller")
@@ -26,18 +25,20 @@ import java.util.Optional;
 public class BookController {
 
     private static final Logger log = LoggerFactory.getLogger(BookController.class);
+
+
     @Autowired
-    private BookRepository repository;
+    private BookService bookService;
 
     private Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-    public BookController(BookRepository repository) {
-        this.repository = repository;
+    public BookController(BookService bookService) {
+        this.bookService = bookService;
     }
 
     @GetMapping()
     public ResponseEntity<String> getBookList(){
-        List<Book> books = repository.findAll();
+        List<Book> books = bookService.getAllBooks();
         String json = gson.toJson(books);
         return ResponseEntity.ok(json);
     }
@@ -45,28 +46,26 @@ public class BookController {
     @GetMapping("/{id}")
     public ResponseEntity<String> getBookById(@PathVariable(name = "id", required = true) Long id){
         try{
-            if(!(repository.existsById(id))){
+            if(!(bookService.existsById(id))){
                 throw new BookNotFound("Esse livro não está cadastrado");
             }
-            Optional<Book> book = repository.findById(id);
-            String json = gson.toJson(book.orElse(null));
+            Book book = bookService.getBookById(id);
+            String json = gson.toJson(book);
             return ResponseEntity.ok(json);
-        } catch (BookNotFound e ){
-            throw new BookNotFound(e.getMessage());
-        } catch (Exception e){
-            throw new RuntimeException("Internal server error");
+        }catch (InternalServerError e){
+            throw new InternalServerError("Internal server error");
         }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteBookById(@PathVariable(name = "id", required = true) Long id){
         try{
-            if (!(repository.existsById(id))){ throw new BookNotFound("Esse livro não está cadastrado");}
+            if (!(bookService.existsById(id))){ throw new BookNotFound("Esse livro não está cadastrado");}
 
         } catch (Exception e){
            throw new BookNotFound(e.getMessage());
         }
-        repository.deleteById(id);
+        bookService.deleteBookById(id);
         return ResponseEntity.ok("Deletado com sucesso");
     }
 
@@ -75,7 +74,7 @@ public class BookController {
     public ResponseEntity<String> postBook(@RequestBody DadosDeCasdastroLivro dados) {
         try {
             Book book = new Book(dados);
-            repository.save(book);
+            bookService.save(book);
             return new ResponseEntity<>("Livro cadastrado com sucesso", HttpStatus.CREATED);
         } catch (InvalidParameters e) {
             throw new InvalidParameters(e.getMessage());
