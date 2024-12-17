@@ -4,7 +4,6 @@ import com.exemplo.estoque.livros.demo.controller.UserController;
 import com.exemplo.estoque.livros.demo.dto.DadosDeCadastroUser;
 import com.exemplo.estoque.livros.demo.dto.User;
 import com.exemplo.estoque.livros.demo.handlers.user.UserNotFoundException;
-import com.exemplo.estoque.livros.demo.repository.UserRepository;
 import com.exemplo.estoque.livros.demo.service.UserService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,8 +17,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;

@@ -3,7 +3,7 @@ package com.exemplo.estoque.livros.demo.controller.books;
 import com.exemplo.estoque.livros.demo.controller.BookController;
 import com.exemplo.estoque.livros.demo.dto.Book;
 import com.exemplo.estoque.livros.demo.dto.DadosDeCasdastroLivro;
-import com.exemplo.estoque.livros.demo.repository.BookRepository;
+import com.exemplo.estoque.livros.demo.service.BookService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,7 +31,7 @@ public class PostBookTests {
     private BookController livroController;
 
     @MockBean
-    private BookRepository bookRepository;
+    private BookService bookService;
 
     @BeforeEach
     public void setUp() {
@@ -40,7 +40,7 @@ public class PostBookTests {
 
     @Test
     public void testPostBookSuccess() throws Exception {
-        DadosDeCasdastroLivro dados = new DadosDeCasdastroLivro(null, "Harry Potter e a Ordem da Fenix", "J.K", 1L);
+        DadosDeCasdastroLivro dados = new DadosDeCasdastroLivro(null, "Harry Potter e a Ordem da Fenixx", "J.K", 1L);
         ObjectMapper mapper = new ObjectMapper();
         String json = mapper.writeValueAsString(dados);
         mockMvc.perform(post("/books")
@@ -97,7 +97,7 @@ public class PostBookTests {
         ObjectMapper mapper = new ObjectMapper();
         String json = mapper.writeValueAsString(dados);
 
-        when(bookRepository.save(any(Book.class))).thenThrow(new RuntimeException());
+        when(bookService.save(any(Book.class))).thenThrow(new RuntimeException());
 
         mockMvc.perform(post("/books")
                         .contentType(MediaType.APPLICATION_JSON)

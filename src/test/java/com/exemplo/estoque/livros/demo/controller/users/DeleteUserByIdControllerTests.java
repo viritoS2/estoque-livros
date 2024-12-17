@@ -1,7 +1,6 @@
 package com.exemplo.estoque.livros.demo.controller.users;
 
 import com.exemplo.estoque.livros.demo.controller.UserController;
-import com.exemplo.estoque.livros.demo.repository.UserRepository;
 import com.exemplo.estoque.livros.demo.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

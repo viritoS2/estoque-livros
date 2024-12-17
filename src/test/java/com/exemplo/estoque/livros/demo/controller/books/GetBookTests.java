@@ -3,7 +3,7 @@ package com.exemplo.estoque.livros.demo.controller.books;
 import com.exemplo.estoque.livros.demo.controller.BookController;
 import com.exemplo.estoque.livros.demo.dto.Book;
 import com.exemplo.estoque.livros.demo.dto.DadosDeCasdastroLivro;
-import com.exemplo.estoque.livros.demo.repository.BookRepository;
+import com.exemplo.estoque.livros.demo.service.BookService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -32,7 +32,7 @@ public class GetBookTests {
     private BookController livroController;
 
     @MockBean
-    private BookRepository bookRepository;
+    private BookService bookService;
 
     @BeforeEach
     public void setUp() {
@@ -42,9 +42,9 @@ public class GetBookTests {
     @Test
     public void testGetLivroSuccess() throws Exception {
         List<Book> books = new ArrayList<>();
-        books.add(new Book(new DadosDeCasdastroLivro(2L, "Harry Potter", "J.K", 4L)));
-        books.add(new Book(new DadosDeCasdastroLivro(1L, "Harry Potter e a Ordem da Fenix", "J.K", 10L)));
-        when(bookRepository.findAll()).thenReturn(books);
+        books.add(new Book(2L, "Harry Potter", "J.K", 4L));
+        books.add(new Book(1L, "Harry Potter e a Ordem da Fenix", "J.K", 10L));
+        when(bookService.getAllBooks()).thenReturn(books);
         mockMvc.perform(get("/books"))
                         .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(2))
@@ -55,8 +55,7 @@ public class GetBookTests {
                 .andExpect(jsonPath("$[1].name").value("Harry Potter e a Ordem da Fenix"))
                 .andExpect(jsonPath("$[1].autor").value("J.K"))
                 .andExpect(jsonPath("$[1].quantidade").value(10));
-        verify(bookRepository).findAll();
-
+        verify(bookService).getAllBooks();
     }
 
     @Test
@@ -64,15 +63,13 @@ public class GetBookTests {
         List<Book> books = new ArrayList<>();
         books.add(new Book(new DadosDeCasdastroLivro(2L, "Harry Potter", "J.K", 4L)));
         books.add(new Book(new DadosDeCasdastroLivro(1L, "Harry Potter e a Ordem da Fenix", "J.K", 10L)));
-        when(bookRepository.findAll()).thenThrow(new RuntimeException());
+        when(bookService.getAllBooks()).thenThrow(new RuntimeException());
         mockMvc.perform(get("/books"))
                 .andExpect(status().isInternalServerError())
                 .andExpect(jsonPath("$.title").value("Internal server error"))
                 .andExpect(jsonPath("$.instance").value("/books"))
                 .andExpect(jsonPath("$.Categoria").value("Application"));
 
-        verify(bookRepository).findAll();
-
+        verify(bookService).getAllBooks();
     }
-
 }
